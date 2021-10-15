@@ -1,0 +1,7 @@
+# directories
+test
+.venv
+.idea
+
+# files
+*.pyc
