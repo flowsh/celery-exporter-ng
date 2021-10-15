@@ -1,6 +1,6 @@
 import os
 import logging
-from test.celery_app import Celery
+from celery import Celery
 from utils import LimitedSizeDict
 from prometheus_client import start_http_server, Summary
 
