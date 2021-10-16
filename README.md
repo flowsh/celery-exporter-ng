@@ -1,6 +1,6 @@
 # Celery Exporter NG
 
-[![Deploy to Docker Hub](https://github.com/flowsh/celery-exporter-ng/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/flowsh/celery-exporter-ng/actions/workflows/main.yml)
+[![Deploy to Docker Hub](https://github.com/flowsh/celery-exporter-ng/actions/workflows/main.yml/badge.svg?event=workflow_dispatch)](https://github.com/flowsh/celery-exporter-ng/actions/workflows/main.yml)
 
 Minimal new generation Prometheus exporter for Celery 5, provides waiting time in queues.
 Therefore tasks are captured at the _task-sent_ event, when entering the celery queues.
