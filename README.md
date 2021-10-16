@@ -4,6 +4,14 @@ Minimal Prometheus exporter for Celery, provides waiting time in queues.
 Therefore tasks are captured at the _task-sent_ event, when entering the celery queues.
 On _task-started_ event, the delay between entering and leaving the queue is calculated and provided as *celery_queue_waiting*.
 
+## Get Container
+
+Get the container from [Docker Hub](https://hub.docker.com/r/flowsh/celery-exporter-ng).
+
+```bash
+docker pull flowsh/celery-exporter-ng
+```
+
 ## Configuration
 
 Environment variable | Value
