@@ -5,6 +5,10 @@ Therefore tasks are captured at the _task-sent_ event, when entering the celery 
 On _task-started_ event, the delay between entering and leaving the queue is calculated and provided as *celery_queue_waiting*.
 If the maximum number of captured tasks is reached, oldest entries in the internal memory will be dropped first.
 
+## Supported Stack
+
+Tested with Celery 5, Broker protocols amqp and redis.
+
 ## Get Container
 
 Get the container from [Docker Hub](https://hub.docker.com/r/flowsh/celery-exporter-ng).

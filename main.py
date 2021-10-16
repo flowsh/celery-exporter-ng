@@ -60,6 +60,6 @@ if __name__ == '__main__':
     log.info(f"Celery Exporter NG listening on port {PORT}")
 
     # initialize celery app for monitor
-    app = Celery(broker='redis://localhost:6379/')
+    app = Celery(broker=BROKER_URL)
     log.info(f"Celery Exporter NG connected to Celery broker, capturing events...")
     my_monitor(app)
