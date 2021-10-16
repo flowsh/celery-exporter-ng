@@ -1,6 +1,6 @@
 # Celery Exporter NG
 
-Minimal Prometheus exporter for Celery, provides waiting time in queues.
+Minimal new generation Prometheus exporter for Celery 5, provides waiting time in queues.
 Therefore tasks are captured at the _task-sent_ event, when entering the celery queues.
 On _task-started_ event, the delay between entering and leaving the queue is calculated and provided as *celery_queue_waiting*.
 
