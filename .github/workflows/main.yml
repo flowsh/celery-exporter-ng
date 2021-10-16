@@ -24,6 +24,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check Out Repo 
         uses: actions/checkout@v2
+        
+      - name: Get the tag name
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
@@ -43,7 +46,7 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:latest,${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:${GITHUB_REF#refs/tags/}
+          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:latest,${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:${{ env.TAG }}
           
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
