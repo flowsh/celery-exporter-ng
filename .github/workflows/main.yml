@@ -43,7 +43,7 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:latest,${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:${{ steps.branch_name.outputs.SOURCE_TAG }}
+          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:latest,${{ secrets.DOCKER_HUB_USERNAME }}/celery-exporter-ng:${GITHUB_REF#refs/tags/}
           
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
