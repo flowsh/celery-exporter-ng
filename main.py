@@ -10,7 +10,7 @@ log.setLevel(logging.DEBUG)
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d.%m.%Y %H:%M:%S')
 
 # get settings from environment variables
-PORT = os.environ.get("PORT", 8000)
+PORT = int(os.environ.get("PORT", 8000))
 BROKER_URL = os.environ.get("BROKER_URL", False)
 if not BROKER_URL:
     log.error(f"BROKER_URL not set!")
@@ -51,7 +51,7 @@ def my_monitor(app):
                 'task-sent': get_sent_time,
                 'task-started': get_started_time,
         })
-        recv.capture(limit=None, timeout=None, wakeup=True)
+        recv.capture(limit=MAX_TASKS_CAPTURED, timeout=None, wakeup=True)
 
 
 if __name__ == '__main__':
