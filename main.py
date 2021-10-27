@@ -30,13 +30,19 @@ def my_monitor(app):
 
     # event: task entered the queue
     def get_sent_time(event):
+        task_id = event['uuid']
         # timestamp, queue and taskname are only send at the sent-event
-        queued_tasks[event['uuid']] = {
+        queued_tasks[task_id] = {
             "ts": event['timestamp'],
             "queue": event['routing_key'],
             "taskname": event['name']
         }
-        queue_length.labels(queue=event['routing_key'], task_name=event['name']).inc()
+
+        # This works because queued_tasks is a LimitedSizeDict which could possibly "reject" new keys being added.
+        # Therefore we check if the key is stored so the information about this task is available in later steps.
+        if task_id in queued_tasks:
+            # only consider task in metrics if it has been stored in the dict
+            queue_length.labels(queue=event['routing_key'], task_name=event['name']).inc()
 
     def get_started_time(event):
         task_id = event['uuid']
@@ -44,6 +50,8 @@ def my_monitor(app):
         if task_id in queued_tasks:
             # calculate waiting time in queue
             lag = event['timestamp'] - queued_tasks[task_id]['ts']
+            # we have to use the information out of the dictionary,
+            # because only the task-sent event stores queue information
             waiting_time.labels(queue=queued_tasks[task_id]['queue'],
                                 task_name=queued_tasks[task_id]['taskname']).observe(lag)
             queue_length.labels(queue=queued_tasks[task_id]['queue'],
@@ -56,11 +64,14 @@ def my_monitor(app):
         task_id = event['uuid']
         # check if tasks sent-event was captured previously
         if task_id in queued_tasks:
+            # we have to use the information out of the dictionary,
+            # because only the task-sent event stores queue information
             tasks_running.labels(queue=queued_tasks[task_id]['queue'],
                                  task_name=queued_tasks[task_id]['taskname'],
                                  worker=event['hostname']).dec()
             queued_tasks.pop(task_id, None)
 
+    # register handler functions for task events in the receiver configuration
     with app.connection() as connection:
         recv = app.events.Receiver(connection, handlers={
                 'task-sent': get_sent_time,
@@ -69,6 +80,7 @@ def my_monitor(app):
                 'task-failed': get_task_done,
                 'task-revoked': get_task_done
         })
+        # start receiver
         recv.capture(limit=MAX_TASKS_CAPTURED, timeout=None, wakeup=True)
 
 
