@@ -26,7 +26,6 @@ Environment variable | Value | Description
 BROKER_URL | redis://user:pass@host:port/db | URL of the Celery Broker
 PORT | 8000 (default) | Listening port of this exporter
 MAX_TASKS_CAPTURED | 100000 (default) | Max number of tasks considered, helps to limit memory usage
-BROKER_RECEIVE_TIMEOUT | 5.0 (default) | Timeout for event capturing in seconds
 
 ## Metrics
 
