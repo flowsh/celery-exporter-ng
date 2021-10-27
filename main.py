@@ -16,7 +16,7 @@ if not BROKER_URL:
     log.error(f"BROKER_URL not set!")
     exit(-1)
 # max_tasks_captured helps to limit memory footprint
-MAX_TASKS_CAPTURED = os.environ.get("MAX_TASKS_CAPTURED", 100000)
+MAX_TASKS_CAPTURED = int(os.environ.get("MAX_TASKS_CAPTURED", 100000))
 
 # define prometheus metrics
 waiting_time = Summary('celery_queue_waiting_seconds', 'Waiting time of tasks in Celery queues', ['queue', 'task_name'])
