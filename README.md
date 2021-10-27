@@ -35,18 +35,25 @@ The queue waiting time is labeled with the name of the queue and the task itself
 ```
 # HELP celery_queue_waiting_seconds Waiting time of tasks in Celery queues
 # TYPE celery_queue_waiting_seconds summary
-celery_queue_waiting_seconds_count{queue="celery",task_name="tasks.do_something"} 8.0
-celery_queue_waiting_seconds_sum{queue="celery",task_name="tasks.do_something"} 19.50933337211609
+celery_queue_waiting_seconds_count{queue="celery",task_name="tasks.do_something"} 12.0
+celery_queue_waiting_seconds_sum{queue="celery",task_name="tasks.do_something"} 6.919644355773926
 # HELP celery_queue_waiting_seconds_created Waiting time of tasks in Celery queues
 # TYPE celery_queue_waiting_seconds_created gauge
-celery_queue_waiting_seconds_created{queue="celery",task_name="tasks.do_something"} 1.6353504535314684e+09
+celery_queue_waiting_seconds_created{queue="celery",task_name="tasks.do_something"} 1.635367870602351e+09
 # HELP celery_tasks_queue_length Length of Celery queues with tasks
 # TYPE celery_tasks_queue_length gauge
-celery_tasks_queue_length{queue="celery",task_name="tasks.do_something"} 10.0
+celery_tasks_queue_length{queue="celery",task_name="tasks.do_something"} 1.0
 # HELP celery_tasks_running Number of Celery Tasks currently running
 # TYPE celery_tasks_running gauge
 celery_tasks_running{queue="celery",task_name="tasks.do_something",worker="celery@DESKTOP-AFLD8PP"} 1.0
-# HELP celery_exporter_tasks_captured Number of tasks captured by Celery exporter
-# TYPE celery_exporter_tasks_captured gauge
-celery_exporter_tasks_captured 11.0
+# HELP celery_exporter_tasks_tracked Number of tasks tracked by Celery exporter, limit is MAX_TASKS_CAPTURED
+# TYPE celery_exporter_tasks_tracked gauge
+celery_exporter_tasks_tracked 2.0
+# HELP celery_tasks_duration_seconds Duration of tasks when finished in given state
+# TYPE celery_tasks_duration_seconds summary
+celery_tasks_duration_seconds_count{queue="celery",state="succeeded",task_name="tasks.do_something",worker="celery@DESKTOP-AFLD8PP"} 11.0
+celery_tasks_duration_seconds_sum{queue="celery",state="succeeded",task_name="tasks.do_something",worker="celery@DESKTOP-AFLD8PP"} 4.866418838500977
+# HELP celery_tasks_duration_seconds_created Duration of tasks when finished in given state
+# TYPE celery_tasks_duration_seconds_created gauge
+celery_tasks_duration_seconds_created{queue="celery",state="succeeded",task_name="tasks.do_something",worker="celery@DESKTOP-AFLD8PP"} 1.6353678708143656e+09
 ```

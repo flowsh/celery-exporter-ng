@@ -1,7 +1,7 @@
 import os
 from logger import log
 from celery import Celery
-from utils import LimitedSizeDict
+from utils import LimitedSizeDict, strip_prefix_from_event
 from prometheus_client import start_http_server, Summary, Gauge
 
 # get settings from environment variables
@@ -21,8 +21,11 @@ waiting_time = Summary('celery_queue_waiting_seconds', 'Waiting time of tasks in
 queue_length = Gauge('celery_tasks_queue_length', 'Length of Celery queues with tasks', ['queue', 'task_name'])
 tasks_running = Gauge('celery_tasks_running',
                       'Number of Celery Tasks currently running', ['queue', 'task_name', 'worker'])
-tasks_captured = Gauge('celery_exporter_tasks_captured', 'Number of tasks captured by Celery exporter')
+tasks_captured = Gauge('celery_exporter_tasks_tracked',
+                       'Number of tasks tracked by Celery exporter, limit is MAX_TASKS_CAPTURED')
 tasks_captured.set_function(lambda: len(queued_tasks))
+execution_stats = Summary('celery_tasks_duration_seconds',
+                          'Duration of tasks when finished in given state', ['queue', 'task_name', 'worker', 'state'])
 
 
 # this monitor captures celery events
@@ -59,6 +62,8 @@ def my_monitor(app):
             tasks_running.labels(queue=queued_tasks[task_id]['queue'],
                                  task_name=queued_tasks[task_id]['taskname'],
                                  worker=event['hostname']).inc()
+            # set ts to timestamp of event for calculation of duration in last step
+            queued_tasks[task_id]['ts'] = event['timestamp']
 
     def get_task_done(event):
         task_id = event['uuid']
@@ -69,6 +74,12 @@ def my_monitor(app):
             tasks_running.labels(queue=queued_tasks[task_id]['queue'],
                                  task_name=queued_tasks[task_id]['taskname'],
                                  worker=event['hostname']).dec()
+            # now add statistics of task execution to metrics
+            runtime = event['timestamp'] - queued_tasks[task_id]['ts']
+            execution_stats.labels(queue=queued_tasks[task_id]['queue'],
+                                   task_name=queued_tasks[task_id]['taskname'],
+                                   worker=event['hostname'],
+                                   state=strip_prefix_from_event(event['type'])).observe(runtime)
             queued_tasks.pop(task_id, None)
 
     # register handler functions for task events in the receiver configuration

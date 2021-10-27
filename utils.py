@@ -21,3 +21,8 @@ class LimitedSizeDict(OrderedDict):
             return free_space
         else:
             return True
+
+
+def strip_prefix_from_event(msg: str) -> str:
+    # stripping away 'task-' from the event type
+    return msg[5:]
