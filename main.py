@@ -7,6 +7,7 @@ from prometheus_client import start_http_server, Summary, Gauge
 # get settings from environment variables
 PORT = int(os.environ.get("PORT", 8000))
 BROKER_URL = os.environ.get("BROKER_URL", False)
+BACKEND_URL = os.environ.get("BACKEND_URL", None)
 if not BROKER_URL:
     log.error(f"BROKER_URL not set!")
     exit(-1)
@@ -101,6 +102,6 @@ if __name__ == '__main__':
     log.info(f"listening on port {PORT}")
 
     # initialize celery app for monitor
-    app = Celery(broker=BROKER_URL)
+    app = Celery(broker=BROKER_URL, backend=BACKEND_URL)
     log.info(f"connected to Celery broker, capturing events...")
     my_monitor(app)

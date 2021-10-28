@@ -24,6 +24,7 @@ docker pull flowsh/celery-exporter-ng
 Environment variable | Value | Description
 ------------ | ------------- | -------------
 BROKER_URL | redis://user:pass@host:port/db | URL of the Celery Broker
+BACKEND_URL | redis://user:pass@host:port/db (optional) | URL of the Celery Result Backend
 PORT | 8000 (default) | Listening port of this exporter
 MAX_TASKS_CAPTURED | 100000 (default) | Max number of tasks considered, helps to limit memory usage
 
